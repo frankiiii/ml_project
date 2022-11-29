@@ -56,12 +56,20 @@ for activ in ['relu','sigmoid']:
             model.compile(optimizer='adam', loss='mse')
             
             # Learning/test of the model
-            cb = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5,restore_best_weights=True)
-            training = model.fit(x=train_x, y=train_y, batch_size=b_si, epochs=50, shuffle=True,validation_data=(val_x,val_y),
-                                 callbacks=[cb])
+            cb = keras.callbacks.EarlyStopping(monitor='loss', patience=5,restore_best_weights=True)
+            training = model.fit(x=train_x, y=train_y, batch_size=b_si, epochs=50, shuffle=True,callbacks=[cb],validation_data=(val_x,val_y))
             pred = model.predict(test_x)
             if mean_squared_error(test_y,pred)<min_mse:
+                pred_fin=pred
                 min_mse = mean_squared_error(test_y,pred)
                 weighted_mse =  mean_squared_error(test_y,pred,sample_weight=test_y+1)
                 param = [activ,b_si,drop]
+
+df_nn = pred_fin.reshape((len(df.iloc[0,:]),int(len(ts_seq_test[:,:-1])/len(df.iloc[0,:]))))
+df_nn = df_nn.T
+df_nn = pd.DataFrame(df_nn)
+df_nn = pd.DataFrame(scaler.inverse_transform(df_nn))
+df_nn.columns = df_tot.columns
+df_nn.index=df_tot.index[-70:]
+
 
