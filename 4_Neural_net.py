@@ -71,5 +71,7 @@ df_nn = pd.DataFrame(df_nn)
 df_nn = pd.DataFrame(scaler.inverse_transform(df_nn))
 df_nn.columns = df_tot.columns
 df_nn.index=df_tot.index[-70:]
+df_nn.to_csv('preds_nn.csv', index=False)
+
 
 
