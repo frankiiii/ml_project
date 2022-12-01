@@ -42,6 +42,7 @@ val_y = ts_seq_val[:,-1]
 test_x = ts_seq_test[:,:-1]
 test_y = ts_seq_test[:,-1] 
 
+param=[]
 min_mse=np.inf
 for activ in ['relu','sigmoid']:
     for b_si in [30,50,100,200]:
@@ -59,11 +60,11 @@ for activ in ['relu','sigmoid']:
             cb = keras.callbacks.EarlyStopping(monitor='loss', patience=5,restore_best_weights=True)
             training = model.fit(x=train_x, y=train_y, batch_size=b_si, epochs=50, shuffle=True,callbacks=[cb],validation_data=(val_x,val_y))
             pred = model.predict(test_x)
+            param.append([activ,b_si,drop,mean_squared_error(test_y,pred),mean_squared_error(test_y,pred,sample_weight=test_y+1)])
             if mean_squared_error(test_y,pred)<min_mse:
                 pred_fin=pred
                 min_mse = mean_squared_error(test_y,pred)
                 weighted_mse =  mean_squared_error(test_y,pred,sample_weight=test_y+1)
-                param = [activ,b_si,drop]
 
 df_nn = pred_fin.reshape((len(df.iloc[0,:]),int(len(ts_seq_test[:,:-1])/len(df.iloc[0,:]))))
 df_nn = df_nn.T
