@@ -32,11 +32,11 @@ for i in df.country.unique():
     # For each observation per country
     for j in range(len(df_sub)):
         
-        # If ????
+        # If event date start and end is the same 
         if df_sub.date_start.iloc[j] == df_sub.date_end.iloc[j]:
             df_tot.loc[df_sub.date_start.iloc[j],i]=df_tot.loc[df_sub.date_start.iloc[j],i]+df_sub.best.iloc[j]
         
-        # Else ????
+        # if event is taking place during several days, we suppose uniform fatalities distribution
         else:
             df_tot.loc[df_sub.date_start.iloc[j]:
             df_sub.date_end.iloc[j],i]=df_tot.loc[df_sub.date_start.iloc[j]: \

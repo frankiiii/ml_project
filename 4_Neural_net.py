@@ -9,6 +9,7 @@ import tensorflow.keras as keras
 from tensorflow.keras.layers import Dense,Dropout
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
+from tensorflow.keras.utils import  plot_model
 
 df_tot= pd.read_csv('ucdp_month.csv',index_col=0,parse_dates=True)
 number_s=11          # 10 months sequences
@@ -62,10 +63,13 @@ for activ in ['relu','sigmoid']:
             pred = model.predict(val_x)
             param.append([activ,b_si,drop,mean_squared_error(val_y,pred),mean_squared_error(val_y,pred,sample_weight=val_y+1)])
             if mean_squared_error(val_y,pred)<min_mse:
+                min_mse=mean_squared_error(val_y,pred)
                 pred=model.predict(test_x)
                 pred_fin=pred
-                min_mse = mean_squared_error(test_y,pred)
-                weighted_mse =  mean_squared_error(test_y,pred,sample_weight=test_y+1)
+
+min_mse_tot = mean_squared_error(test_y,pred_fin)
+weighted_mse =  mean_squared_error(test_y,pred_fin,sample_weight=test_y+1)
+plot_model(model, to_file='model_plot.png', show_shapes=True)
 
 df_nn = pred_fin.reshape((len(df.iloc[0,:]),int(len(ts_seq_test[:,:-1])/len(df.iloc[0,:]))))
 df_nn = df_nn.T
