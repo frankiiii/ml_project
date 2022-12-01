@@ -57,11 +57,12 @@ for activ in ['relu','sigmoid']:
             model.compile(optimizer='adam', loss='mse')
             
             # Learning/test of the model
-            cb = keras.callbacks.EarlyStopping(monitor='loss', patience=5,restore_best_weights=True)
-            training = model.fit(x=train_x, y=train_y, batch_size=b_si, epochs=50, shuffle=True,callbacks=[cb],validation_data=(val_x,val_y))
-            pred = model.predict(test_x)
-            param.append([activ,b_si,drop,mean_squared_error(test_y,pred),mean_squared_error(test_y,pred,sample_weight=test_y+1)])
-            if mean_squared_error(test_y,pred)<min_mse:
+            cb = keras.callbacks.EarlyStopping(monitor='loss', patience=10,restore_best_weights=True)
+            training = model.fit(x=train_x, y=train_y, batch_size=b_si, epochs=100, shuffle=True,callbacks=[cb],validation_data=(val_x,val_y))
+            pred = model.predict(val_x)
+            param.append([activ,b_si,drop,mean_squared_error(val_y,pred),mean_squared_error(val_y,pred,sample_weight=val_y+1)])
+            if mean_squared_error(val_y,pred)<min_mse:
+                pred=model.predict(test_x)
                 pred_fin=pred
                 min_mse = mean_squared_error(test_y,pred)
                 weighted_mse =  mean_squared_error(test_y,pred,sample_weight=test_y+1)
@@ -74,5 +75,8 @@ df_nn.columns = df_tot.columns
 df_nn.index=df_tot.index[-70:]
 df_nn.to_csv('preds_nn.csv', index=False)
 
+param=pd.DataFrame(param)
+param.columns=['Activation','Batch_size','Dropout','MSE','WMSE']
+param.to_latex('tuning_nn.tex', index=False)
 
 
