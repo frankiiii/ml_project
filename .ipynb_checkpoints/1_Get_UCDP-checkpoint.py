@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Nov 27 23:40:49 2022
-
-@author: thoma
-"""
-
 ### Import libraries -----
 import pandas as pd
 
@@ -21,7 +14,7 @@ df_tot = pd.DataFrame(columns=df.country.unique(),
 # Fill with zeros
 df_tot=df_tot.fillna(0)
 
-### Fill in the data to blank dataframe ----
+### Fill in the data in blank dataframe ----
 
 # For each country
 for i in df.country.unique():
@@ -32,11 +25,9 @@ for i in df.country.unique():
     # For each observation per country
     for j in range(len(df_sub)):
         
-        # If ????
         if df_sub.date_start.iloc[j] == df_sub.date_end.iloc[j]:
             df_tot.loc[df_sub.date_start.iloc[j],i]=df_tot.loc[df_sub.date_start.iloc[j],i]+df_sub.best.iloc[j]
         
-        # Else ????
         else:
             df_tot.loc[df_sub.date_start.iloc[j]:
             df_sub.date_end.iloc[j],i]=df_tot.loc[df_sub.date_start.iloc[j]: \
