@@ -6,10 +6,10 @@ from tensorflow.keras.layers import Dense,Dropout
 from tensorflow.keras.utils import  plot_model
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
-import os
+#import os
 
 # Set working directory
-os.chdir('/Users/hannahfrank/ml_project')
+#os.chdir('/Users/hannahfrank/ml_project')
 
 ### Load data ----
 df_ucdp = pd.read_csv('ucdp_month.csv', 
